@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bruce-hill/bruce-test-go/internal/requestconfig"
+	"github.com/bruce-hill/bruce-test-go/v2/internal/requestconfig"
 	"github.com/tidwall/sjson"
 )
 
