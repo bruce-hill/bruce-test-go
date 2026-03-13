@@ -8,13 +8,13 @@ import (
 	"net/url"
 	"slices"
 
-	"github.com/stainless-sdks-staging/bruce-test-go/internal/apijson"
-	"github.com/stainless-sdks-staging/bruce-test-go/internal/apiquery"
-	"github.com/stainless-sdks-staging/bruce-test-go/internal/requestconfig"
-	"github.com/stainless-sdks-staging/bruce-test-go/option"
-	"github.com/stainless-sdks-staging/bruce-test-go/packages/pagination"
-	"github.com/stainless-sdks-staging/bruce-test-go/packages/param"
-	"github.com/stainless-sdks-staging/bruce-test-go/packages/respjson"
+	"github.com/bruce-hill/bruce-test-go/v2/internal/apijson"
+	"github.com/bruce-hill/bruce-test-go/v2/internal/apiquery"
+	"github.com/bruce-hill/bruce-test-go/v2/internal/requestconfig"
+	"github.com/bruce-hill/bruce-test-go/v2/option"
+	"github.com/bruce-hill/bruce-test-go/v2/packages/pagination"
+	"github.com/bruce-hill/bruce-test-go/v2/packages/param"
+	"github.com/bruce-hill/bruce-test-go/v2/packages/respjson"
 )
 
 // PaginationService contains methods and other services that help with interacting

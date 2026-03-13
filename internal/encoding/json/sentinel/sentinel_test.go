@@ -1,8 +1,8 @@
 package sentinel_test
 
 import (
-	"github.com/stainless-sdks-staging/bruce-test-go/internal/encoding/json/sentinel"
-	"github.com/stainless-sdks-staging/bruce-test-go/packages/param"
+	"github.com/bruce-hill/bruce-test-go/v2/internal/encoding/json/sentinel"
+	"github.com/bruce-hill/bruce-test-go/v2/packages/param"
 	"reflect"
 	"slices"
 	"testing"

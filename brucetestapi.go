@@ -10,12 +10,12 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/stainless-sdks-staging/bruce-test-go/internal/apiform"
-	"github.com/stainless-sdks-staging/bruce-test-go/internal/apijson"
-	"github.com/stainless-sdks-staging/bruce-test-go/internal/apiquery"
-	shimjson "github.com/stainless-sdks-staging/bruce-test-go/internal/encoding/json"
-	"github.com/stainless-sdks-staging/bruce-test-go/packages/param"
-	"github.com/stainless-sdks-staging/bruce-test-go/packages/respjson"
+	"github.com/bruce-hill/bruce-test-go/v2/internal/apiform"
+	"github.com/bruce-hill/bruce-test-go/v2/internal/apijson"
+	"github.com/bruce-hill/bruce-test-go/v2/internal/apiquery"
+	shimjson "github.com/bruce-hill/bruce-test-go/v2/internal/encoding/json"
+	"github.com/bruce-hill/bruce-test-go/v2/packages/param"
+	"github.com/bruce-hill/bruce-test-go/v2/packages/respjson"
 )
 
 // Response confirming the user update

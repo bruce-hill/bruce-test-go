@@ -2,7 +2,7 @@ package param_test
 
 import (
 	"encoding/json"
-	"github.com/stainless-sdks-staging/bruce-test-go/packages/param"
+	"github.com/bruce-hill/bruce-test-go/v2/packages/param"
 	"testing"
 )
 

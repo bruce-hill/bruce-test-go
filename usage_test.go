@@ -7,9 +7,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stainless-sdks-staging/bruce-test-go"
-	"github.com/stainless-sdks-staging/bruce-test-go/internal/testutil"
-	"github.com/stainless-sdks-staging/bruce-test-go/option"
+	"github.com/bruce-hill/bruce-test-go/v2"
+	"github.com/bruce-hill/bruce-test-go/v2/internal/testutil"
+	"github.com/bruce-hill/bruce-test-go/v2/option"
 )
 
 func TestUsage(t *testing.T) {
