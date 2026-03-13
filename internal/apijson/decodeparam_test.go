@@ -3,8 +3,8 @@ package apijson_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/stainless-sdks-staging/bruce-test-go/internal/apijson"
-	"github.com/stainless-sdks-staging/bruce-test-go/packages/param"
+	"github.com/bruce-hill/bruce-test-go/internal/apijson"
+	"github.com/bruce-hill/bruce-test-go/packages/param"
 	"reflect"
 	"testing"
 )

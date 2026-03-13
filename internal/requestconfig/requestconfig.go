@@ -18,10 +18,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/stainless-sdks-staging/bruce-test-go/internal"
-	"github.com/stainless-sdks-staging/bruce-test-go/internal/apierror"
-	"github.com/stainless-sdks-staging/bruce-test-go/internal/apiform"
-	"github.com/stainless-sdks-staging/bruce-test-go/internal/apiquery"
+	"github.com/bruce-hill/bruce-test-go/internal"
+	"github.com/bruce-hill/bruce-test-go/internal/apierror"
+	"github.com/bruce-hill/bruce-test-go/internal/apiform"
+	"github.com/bruce-hill/bruce-test-go/internal/apiquery"
 )
 
 func getDefaultHeaders() map[string]string {

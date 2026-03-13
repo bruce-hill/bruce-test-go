@@ -8,11 +8,11 @@ import (
 	"net/url"
 	"slices"
 
-	"github.com/stainless-sdks-staging/bruce-test-go/internal/apiquery"
-	"github.com/stainless-sdks-staging/bruce-test-go/internal/requestconfig"
-	"github.com/stainless-sdks-staging/bruce-test-go/option"
-	"github.com/stainless-sdks-staging/bruce-test-go/packages/pagination"
-	"github.com/stainless-sdks-staging/bruce-test-go/packages/param"
+	"github.com/bruce-hill/bruce-test-go/internal/apiquery"
+	"github.com/bruce-hill/bruce-test-go/internal/requestconfig"
+	"github.com/bruce-hill/bruce-test-go/option"
+	"github.com/bruce-hill/bruce-test-go/packages/pagination"
+	"github.com/bruce-hill/bruce-test-go/packages/param"
 )
 
 // PaginationIntService contains methods and other services that help with
