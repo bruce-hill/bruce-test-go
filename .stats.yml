@@ -1,4 +1,4 @@
-configured_endpoints: 19
-openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs-5vak/bruceco%2Fbruce-test-6937085190e3e5553f943ff22deda900cd8ad4bf5e37278cba7de683b78ae8d2.yml
-openapi_spec_hash: 85dc5d1e011be6539c240594f06f284b
-config_hash: f9829ce69a8ce032930ac8f4cb36ce0c
+configured_endpoints: 12
+openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs-5vak/bruceco%2Fbruce-test-89c1eea413e18daa1fa7ba6d34b5fc526e7c3b17615b1f9e2626b527506a40ae.yml
+openapi_spec_hash: 724f3a75a00345e4e95150e54be4dfbd
+config_hash: 6c59d9ec1407b7f32bf107be58e5015d

@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package brucetest_test
+package brucetestapi_test
 
 import (
 	"context"
@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stainless-sdks-staging/bruce-test-go"
-	"github.com/stainless-sdks-staging/bruce-test-go/internal"
-	"github.com/stainless-sdks-staging/bruce-test-go/option"
+	"github.com/bruce-hill/bruce-test-api-go"
+	"github.com/bruce-hill/bruce-test-api-go/internal"
+	"github.com/bruce-hill/bruce-test-api-go/option"
 )
 
 type closureTransport struct {
@@ -25,7 +25,7 @@ func (t *closureTransport) RoundTrip(req *http.Request) (*http.Response, error) 
 
 func TestUserAgentHeader(t *testing.T) {
 	var userAgent string
-	client := brucetest.NewClient(
+	client := brucetestapi.NewClient(
 		option.WithAPIKey("My API Key"),
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
@@ -38,15 +38,17 @@ func TestUserAgentHeader(t *testing.T) {
 			},
 		}),
 	)
-	client.Store.ListInventory(context.Background())
-	if userAgent != fmt.Sprintf("BruceTest/Go %s", internal.PackageVersion) {
+	_, _ = client.UpdateCount(context.Background(), brucetestapi.UpdateCountParams{
+		Body: 123,
+	})
+	if userAgent != fmt.Sprintf("BruceTestAPI/Go %s", internal.PackageVersion) {
 		t.Errorf("Expected User-Agent to be correct, but got: %#v", userAgent)
 	}
 }
 
 func TestRetryAfter(t *testing.T) {
 	retryCountHeaders := make([]string, 0)
-	client := brucetest.NewClient(
+	client := brucetestapi.NewClient(
 		option.WithAPIKey("My API Key"),
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
@@ -62,7 +64,9 @@ func TestRetryAfter(t *testing.T) {
 			},
 		}),
 	)
-	_, err := client.Store.ListInventory(context.Background())
+	_, err := client.UpdateCount(context.Background(), brucetestapi.UpdateCountParams{
+		Body: 123,
+	})
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
 	}
@@ -80,7 +84,7 @@ func TestRetryAfter(t *testing.T) {
 
 func TestDeleteRetryCountHeader(t *testing.T) {
 	retryCountHeaders := make([]string, 0)
-	client := brucetest.NewClient(
+	client := brucetestapi.NewClient(
 		option.WithAPIKey("My API Key"),
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
@@ -97,7 +101,9 @@ func TestDeleteRetryCountHeader(t *testing.T) {
 		}),
 		option.WithHeaderDel("X-Stainless-Retry-Count"),
 	)
-	_, err := client.Store.ListInventory(context.Background())
+	_, err := client.UpdateCount(context.Background(), brucetestapi.UpdateCountParams{
+		Body: 123,
+	})
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
 	}
@@ -110,7 +116,7 @@ func TestDeleteRetryCountHeader(t *testing.T) {
 
 func TestOverwriteRetryCountHeader(t *testing.T) {
 	retryCountHeaders := make([]string, 0)
-	client := brucetest.NewClient(
+	client := brucetestapi.NewClient(
 		option.WithAPIKey("My API Key"),
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
@@ -127,7 +133,9 @@ func TestOverwriteRetryCountHeader(t *testing.T) {
 		}),
 		option.WithHeader("X-Stainless-Retry-Count", "42"),
 	)
-	_, err := client.Store.ListInventory(context.Background())
+	_, err := client.UpdateCount(context.Background(), brucetestapi.UpdateCountParams{
+		Body: 123,
+	})
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
 	}
@@ -140,7 +148,7 @@ func TestOverwriteRetryCountHeader(t *testing.T) {
 
 func TestRetryAfterMs(t *testing.T) {
 	attempts := 0
-	client := brucetest.NewClient(
+	client := brucetestapi.NewClient(
 		option.WithAPIKey("My API Key"),
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
@@ -156,7 +164,9 @@ func TestRetryAfterMs(t *testing.T) {
 			},
 		}),
 	)
-	_, err := client.Store.ListInventory(context.Background())
+	_, err := client.UpdateCount(context.Background(), brucetestapi.UpdateCountParams{
+		Body: 123,
+	})
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
 	}
@@ -166,7 +176,7 @@ func TestRetryAfterMs(t *testing.T) {
 }
 
 func TestContextCancel(t *testing.T) {
-	client := brucetest.NewClient(
+	client := brucetestapi.NewClient(
 		option.WithAPIKey("My API Key"),
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
@@ -179,14 +189,16 @@ func TestContextCancel(t *testing.T) {
 	)
 	cancelCtx, cancel := context.WithCancel(context.Background())
 	cancel()
-	_, err := client.Store.ListInventory(cancelCtx)
+	_, err := client.UpdateCount(cancelCtx, brucetestapi.UpdateCountParams{
+		Body: 123,
+	})
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
 	}
 }
 
 func TestContextCancelDelay(t *testing.T) {
-	client := brucetest.NewClient(
+	client := brucetestapi.NewClient(
 		option.WithAPIKey("My API Key"),
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
@@ -199,7 +211,9 @@ func TestContextCancelDelay(t *testing.T) {
 	)
 	cancelCtx, cancel := context.WithTimeout(context.Background(), 2*time.Millisecond)
 	defer cancel()
-	_, err := client.Store.ListInventory(cancelCtx)
+	_, err := client.UpdateCount(cancelCtx, brucetestapi.UpdateCountParams{
+		Body: 123,
+	})
 	if err == nil {
 		t.Error("expected there to be a cancel error")
 	}
@@ -214,7 +228,7 @@ func TestContextDeadline(t *testing.T) {
 	defer cancel()
 
 	go func() {
-		client := brucetest.NewClient(
+		client := brucetestapi.NewClient(
 			option.WithAPIKey("My API Key"),
 			option.WithHTTPClient(&http.Client{
 				Transport: &closureTransport{
@@ -225,7 +239,9 @@ func TestContextDeadline(t *testing.T) {
 				},
 			}),
 		)
-		_, err := client.Store.ListInventory(deadlineCtx)
+		_, err := client.UpdateCount(deadlineCtx, brucetestapi.UpdateCountParams{
+			Body: 123,
+		})
 		if err == nil {
 			t.Error("expected there to be a deadline error")
 		}

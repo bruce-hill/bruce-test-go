@@ -11,15 +11,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/stainless-sdks-staging/bruce-test-go/internal/requestconfig"
+	"github.com/bruce-hill/bruce-test-api-go/internal/requestconfig"
 	"github.com/tidwall/sjson"
 )
 
-// RequestOption is an option for the requests made by the bruce-test API Client
+// RequestOption is an option for the requests made by the bruce-test-api API Client
 // which can be supplied to clients, services, and methods. You can read more about this functional
 // options pattern in our [README].
 //
-// [README]: https://pkg.go.dev/github.com/stainless-sdks-staging/bruce-test-go#readme-requestoptions
+// [README]: https://pkg.go.dev/github.com/bruce-hill/bruce-test-api-go#readme-requestoptions
 type RequestOption = requestconfig.RequestOption
 
 // WithBaseURL returns a RequestOption that sets the BaseURL for the client.
@@ -263,13 +263,13 @@ func WithRequestTimeout(dur time.Duration) RequestOption {
 // environment to be the "production" environment. An environment specifies which base URL
 // to use by default.
 func WithEnvironmentProduction() RequestOption {
-	return requestconfig.WithDefaultBaseURL("https://petstore3.swagger.io/api/v3/")
+	return requestconfig.WithDefaultBaseURL("http://localhost:8000/")
 }
 
 // WithAPIKey returns a RequestOption that sets the client setting "api_key".
 func WithAPIKey(value string) RequestOption {
 	return requestconfig.RequestOptionFunc(func(r *requestconfig.RequestConfig) error {
 		r.APIKey = value
-		return r.Apply(WithHeader("api_key", r.APIKey))
+		return r.Apply(WithHeader("authorization", fmt.Sprintf("Bearer %s", r.APIKey)))
 	})
 }

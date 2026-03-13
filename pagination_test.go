@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package brucetest_test
+package brucetestapi_test
 
 import (
 	"context"
@@ -8,13 +8,12 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stainless-sdks-staging/bruce-test-go"
-	"github.com/stainless-sdks-staging/bruce-test-go/internal/testutil"
-	"github.com/stainless-sdks-staging/bruce-test-go/option"
+	"github.com/bruce-hill/bruce-test-api-go"
+	"github.com/bruce-hill/bruce-test-api-go/internal/testutil"
+	"github.com/bruce-hill/bruce-test-api-go/option"
 )
 
-func TestStoreListInventory(t *testing.T) {
-	t.Skip("Prism tests are disabled")
+func TestPaginationListWithOptionalParams(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -22,13 +21,17 @@ func TestStoreListInventory(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := brucetest.NewClient(
+	client := brucetestapi.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Store.ListInventory(context.TODO())
+	_, err := client.Pagination.List(context.TODO(), brucetestapi.PaginationListParams{
+		Page: brucetestapi.Int(1),
+		Size: brucetestapi.Int(1),
+		Tags: []string{"string"},
+	})
 	if err != nil {
-		var apierr *brucetest.Error
+		var apierr *brucetestapi.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}

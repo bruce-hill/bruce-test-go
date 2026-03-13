@@ -1,29 +1,37 @@
-# Bruce Test Go API Library
+# Bruce Test API Go API Library
 
 <!-- x-release-please-start-version -->
 
-<a href="https://pkg.go.dev/github.com/stainless-sdks-staging/bruce-test-go"><img src="https://pkg.go.dev/badge/github.com/stainless-sdks-staging/bruce-test-go.svg" alt="Go Reference"></a>
+<a href="https://pkg.go.dev/github.com/bruce-hill/bruce-test-api-go"><img src="https://pkg.go.dev/badge/github.com/bruce-hill/bruce-test-api-go.svg" alt="Go Reference"></a>
 
 <!-- x-release-please-end -->
 
-The Bruce Test Go library provides convenient access to the Bruce Test REST API
+The Bruce Test API Go library provides convenient access to the Bruce Test API REST API
 from applications written in Go.
 
 It is generated with [Stainless](https://www.stainless.com/).
 
 ## Installation
 
+<!-- x-release-please-start-version -->
+
 ```go
 import (
-	"github.com/stainless-sdks-staging/bruce-test-go" // imported as brucetest
+	"github.com/bruce-hill/bruce-test-api-go" // imported as brucetestapi
 )
 ```
 
+<!-- x-release-please-end -->
+
 Or to pin the version:
 
+<!-- x-release-please-start-version -->
+
 ```sh
-go get -u 'github.com/stainless-sdks-staging/bruce-test-go@v0.0.1'
+go get -u 'github.com/bruce-hill/bruce-test-api-go@v0.0.1'
 ```
+
+<!-- x-release-please-end -->
 
 ## Requirements
 
@@ -40,32 +48,34 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/stainless-sdks-staging/bruce-test-go"
-	"github.com/stainless-sdks-staging/bruce-test-go/option"
+	"github.com/bruce-hill/bruce-test-api-go"
+	"github.com/bruce-hill/bruce-test-api-go/option"
 )
 
 func main() {
-	client := brucetest.NewClient(
-		option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("PETSTORE_API_KEY")
+	client := brucetestapi.NewClient(
+		option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("BRUCE_TEST_API_API_KEY")
 	)
-	order, err := client.Store.Orders.New(context.TODO(), brucetest.StoreOrderNewParams{})
+	response, err := client.UpdateCount(context.TODO(), brucetestapi.UpdateCountParams{
+		Body: 123,
+	})
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Printf("%+v\n", order.ID)
+	fmt.Printf("%+v\n", response.Count)
 }
 
 ```
 
 ### Request fields
 
-The brucetest library uses the [`omitzero`](https://tip.golang.org/doc/go1.24#encodingjsonpkgencodingjson)
+The brucetestapi library uses the [`omitzero`](https://tip.golang.org/doc/go1.24#encodingjsonpkgencodingjson)
 semantics from the Go 1.24+ `encoding/json` release for request fields.
 
 Required primitive fields (`int64`, `string`, etc.) feature the tag <code>\`json:"...,required"\`</code>. These
 fields are always serialized, even their zero values.
 
-Optional primitive types are wrapped in a `param.Opt[T]`. These fields can be set with the provided constructors, `brucetest.String(string)`, `brucetest.Int(int64)`, etc.
+Optional primitive types are wrapped in a `param.Opt[T]`. These fields can be set with the provided constructors, `brucetestapi.String(string)`, `brucetestapi.Int(int64)`, etc.
 
 Any `param.Opt[T]`, map, slice, struct or string enum uses the
 tag <code>\`json:"...,omitzero"\`</code>. Its zero value is considered omitted.
@@ -73,17 +83,17 @@ tag <code>\`json:"...,omitzero"\`</code>. Its zero value is considered omitted.
 The `param.IsOmitted(any)` function can confirm the presence of any `omitzero` field.
 
 ```go
-p := brucetest.ExampleParams{
-	ID:   "id_xxx",                // required property
-	Name: brucetest.String("..."), // optional property
+p := brucetestapi.ExampleParams{
+	ID:   "id_xxx",                   // required property
+	Name: brucetestapi.String("..."), // optional property
 
-	Point: brucetest.Point{
-		X: 0,                // required field will serialize as 0
-		Y: brucetest.Int(1), // optional field will serialize as 1
+	Point: brucetestapi.Point{
+		X: 0,                   // required field will serialize as 0
+		Y: brucetestapi.Int(1), // optional field will serialize as 1
 		// ... omitted non-required fields will not be serialized
 	},
 
-	Origin: brucetest.Origin{}, // the zero value of [Origin] is considered omitted
+	Origin: brucetestapi.Origin{}, // the zero value of [Origin] is considered omitted
 }
 ```
 
@@ -112,7 +122,7 @@ p.SetExtraFields(map[string]any{
 })
 
 // Send a number instead of an object
-custom := param.Override[brucetest.FooParams](12)
+custom := param.Override[brucetestapi.FooParams](12)
 ```
 
 ### Request unions
@@ -253,12 +263,12 @@ This library uses the functional options pattern. Functions defined in the
 requests. For example:
 
 ```go
-client := brucetest.NewClient(
+client := brucetestapi.NewClient(
 	// Adds a header to every request made by the client
 	option.WithHeader("X-Some-Header", "custom_header_info"),
 )
 
-client.Store.ListInventory(context.TODO(), ...,
+client.UpdateCount(context.TODO(), ...,
 	// Override the header
 	option.WithHeader("X-Some-Header", "some_other_custom_header_info"),
 	// Add an undocumented field to the request body, using sjson syntax
@@ -268,7 +278,7 @@ client.Store.ListInventory(context.TODO(), ...,
 
 The request option `option.WithDebugLog(nil)` may be helpful while debugging.
 
-See the [full list of request options](https://pkg.go.dev/github.com/stainless-sdks-staging/bruce-test-go/option).
+See the [full list of request options](https://pkg.go.dev/github.com/bruce-hill/bruce-test-api-go/option).
 
 ### Pagination
 
@@ -276,27 +286,54 @@ This library provides some conveniences for working with paginated list endpoint
 
 You can use `.ListAutoPaging()` methods to iterate through items across all pages:
 
+```go
+iter := client.Pagination.ListAutoPaging(context.TODO(), brucetestapi.PaginationListParams{})
+// Automatically fetches more pages as needed.
+for iter.Next() {
+	paginationListResponse := iter.Current()
+	fmt.Printf("%+v\n", paginationListResponse)
+}
+if err := iter.Err(); err != nil {
+	panic(err.Error())
+}
+```
+
 Or you can use simple `.List()` methods to fetch a single page and receive a standard response object
 with additional helper methods like `.GetNextPage()`, e.g.:
+
+```go
+page, err := client.Pagination.List(context.TODO(), brucetestapi.PaginationListParams{})
+for page != nil {
+	for _, pagination := range page.Items {
+		fmt.Printf("%+v\n", pagination)
+	}
+	page, err = page.GetNextPage()
+}
+if err != nil {
+	panic(err.Error())
+}
+```
 
 ### Errors
 
 When the API returns a non-success status code, we return an error with type
-`*brucetest.Error`. This contains the `StatusCode`, `*http.Request`, and
+`*brucetestapi.Error`. This contains the `StatusCode`, `*http.Request`, and
 `*http.Response` values of the request, as well as the JSON of the error body
 (much like other response objects in the SDK).
 
 To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
-_, err := client.Store.ListInventory(context.TODO())
+_, err := client.UpdateCount(context.TODO(), brucetestapi.UpdateCountParams{
+	Body: 123,
+})
 if err != nil {
-	var apierr *brucetest.Error
+	var apierr *brucetestapi.Error
 	if errors.As(err, &apierr) {
 		println(string(apierr.DumpRequest(true)))  // Prints the serialized HTTP request
 		println(string(apierr.DumpResponse(true))) // Prints the serialized HTTP response
 	}
-	panic(err.Error()) // GET "/store/inventory": 400 Bad Request { ... }
+	panic(err.Error()) // GET "/count": 400 Bad Request { ... }
 }
 ```
 
@@ -314,8 +351,11 @@ To set a per-retry timeout, use `option.WithRequestTimeout()`.
 // This sets the timeout for the request, including all the retries.
 ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 defer cancel()
-client.Store.ListInventory(
+client.UpdateCount(
 	ctx,
+	brucetestapi.UpdateCountParams{
+		Body: 123,
+	},
 	// This sets the per-retry timeout
 	option.WithRequestTimeout(20*time.Second),
 )
@@ -331,8 +371,26 @@ The file name and content-type can be customized by implementing `Name() string`
 string` on the run-time type of `io.Reader`. Note that `os.File` implements `Name() string`, so a
 file returned by `os.Open` will be sent with the file name on disk.
 
-We also provide a helper `brucetest.File(reader io.Reader, filename string, contentType string)`
+We also provide a helper `brucetestapi.File(reader io.Reader, filename string, contentType string)`
 which can be used to wrap any `io.Reader` with the appropriate file name and content type.
+
+```go
+// A file from the file system
+file, err := os.Open("/path/to/file")
+brucetestapi.UploadTestParams{
+	File: file,
+}
+
+// A file from a string
+brucetestapi.UploadTestParams{
+	File: strings.NewReader("my file contents"),
+}
+
+// With a custom filename and contentType
+brucetestapi.UploadTestParams{
+	File: brucetestapi.File(strings.NewReader(`{"hello": "foo"}`), "file.go", "application/json"),
+}
+```
 
 ### Retries
 
@@ -344,12 +402,18 @@ You can use the `WithMaxRetries` option to configure or disable this:
 
 ```go
 // Configure the default for all requests:
-client := brucetest.NewClient(
+client := brucetestapi.NewClient(
 	option.WithMaxRetries(0), // default is 2
 )
 
 // Override per-request:
-client.Store.ListInventory(context.TODO(), option.WithMaxRetries(5))
+client.UpdateCount(
+	context.TODO(),
+	brucetestapi.UpdateCountParams{
+		Body: 123,
+	},
+	option.WithMaxRetries(5),
+)
 ```
 
 ### Accessing raw response data (e.g. response headers)
@@ -360,7 +424,13 @@ you need to examine response headers, status codes, or other details.
 ```go
 // Create a variable to store the HTTP response
 var response *http.Response
-response, err := client.Store.ListInventory(context.TODO(), option.WithResponseInto(&response))
+response, err := client.UpdateCount(
+	context.TODO(),
+	brucetestapi.UpdateCountParams{
+		Body: 123,
+	},
+	option.WithResponseInto(&response),
+)
 if err != nil {
 	// handle error
 }
@@ -405,7 +475,7 @@ or the `option.WithJSONSet()` methods.
 params := FooNewParams{
     ID:   "id_xxxx",
     Data: FooNewParamsData{
-        FirstName: brucetest.String("John"),
+        FirstName: brucetestapi.String("John"),
     },
 }
 client.Foo.New(context.Background(), params, option.WithJSONSet("data.last_name", "Doe"))
@@ -440,7 +510,7 @@ func Logger(req *http.Request, next option.MiddlewareNext) (res *http.Response, 
     return res, err
 }
 
-client := brucetest.NewClient(
+client := brucetestapi.NewClient(
 	option.WithMiddleware(Logger),
 )
 ```
@@ -465,7 +535,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks-staging/bruce-test-go/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/bruce-hill/bruce-test-api-go/issues) with questions, bugs, or suggestions.
 
 ## Contributing
 

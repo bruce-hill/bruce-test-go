@@ -1,52 +1,53 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package brucetest
+package brucetestapi
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"net/http"
 	"os"
 	"slices"
 
-	"github.com/stainless-sdks-staging/bruce-test-go/internal/requestconfig"
-	"github.com/stainless-sdks-staging/bruce-test-go/option"
+	"github.com/bruce-hill/bruce-test-api-go/internal/requestconfig"
+	"github.com/bruce-hill/bruce-test-api-go/option"
+	"github.com/bruce-hill/bruce-test-api-go/packages/param"
 )
 
 // Client creates a struct with services and top level methods that help with
-// interacting with the bruce-test API. You should not instantiate this client
+// interacting with the bruce-test-api API. You should not instantiate this client
 // directly, and instead use the [NewClient] method instead.
 type Client struct {
-	Options []option.RequestOption
-	Pets    PetService
-	Store   StoreService
-	Users   UserService
+	Options    []option.RequestOption
+	Pagination PaginationService
+	StreamJson StreamJsonService
 }
 
-// DefaultClientOptions read from the environment (PETSTORE_API_KEY,
-// BRUCE_TEST_BASE_URL). This should be used to initialize new clients.
+// DefaultClientOptions read from the environment (BRUCE_TEST_API_API_KEY,
+// BRUCE_TEST_API_BASE_URL). This should be used to initialize new clients.
 func DefaultClientOptions() []option.RequestOption {
 	defaults := []option.RequestOption{option.WithEnvironmentProduction()}
-	if o, ok := os.LookupEnv("BRUCE_TEST_BASE_URL"); ok {
+	if o, ok := os.LookupEnv("BRUCE_TEST_API_BASE_URL"); ok {
 		defaults = append(defaults, option.WithBaseURL(o))
 	}
-	if o, ok := os.LookupEnv("PETSTORE_API_KEY"); ok {
+	if o, ok := os.LookupEnv("BRUCE_TEST_API_API_KEY"); ok {
 		defaults = append(defaults, option.WithAPIKey(o))
 	}
 	return defaults
 }
 
 // NewClient generates a new client with the default option read from the
-// environment (PETSTORE_API_KEY, BRUCE_TEST_BASE_URL). The option passed in as
-// arguments are applied after these default arguments, and all option will be
-// passed down to the services and requests that this client makes.
+// environment (BRUCE_TEST_API_API_KEY, BRUCE_TEST_API_BASE_URL). The option passed
+// in as arguments are applied after these default arguments, and all option will
+// be passed down to the services and requests that this client makes.
 func NewClient(opts ...option.RequestOption) (r Client) {
 	opts = append(DefaultClientOptions(), opts...)
 
 	r = Client{Options: opts}
 
-	r.Pets = NewPetService(opts...)
-	r.Store = NewStoreService(opts...)
-	r.Users = NewUserService(opts...)
+	r.Pagination = NewPaginationService(opts...)
+	r.StreamJson = NewStreamJsonService(opts...)
 
 	return
 }
@@ -118,4 +119,104 @@ func (r *Client) Patch(ctx context.Context, path string, params any, res any, op
 // response.
 func (r *Client) Delete(ctx context.Context, path string, params any, res any, opts ...option.RequestOption) error {
 	return r.Execute(ctx, http.MethodDelete, path, params, res, opts...)
+}
+
+// Deletion test using DELETE verb
+func (r *Client) DeleteTest(ctx context.Context, opts ...option.RequestOption) (err error) {
+	opts = slices.Concat(r.Options, opts)
+	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
+	path := "delete"
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, nil, opts...)
+	return err
+}
+
+// Download a file using application/octet-stream
+func (r *Client) DownloadTest(ctx context.Context, opts ...option.RequestOption) (res *http.Response, err error) {
+	opts = slices.Concat(r.Options, opts)
+	opts = append([]option.RequestOption{option.WithHeader("Accept", "application/octet-stream")}, opts...)
+	path := "download"
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	return res, err
+}
+
+// Demonstrates a form-data endpoint with various parameter types including path,
+// query, and header parameters. Accepts multipart form data for user updates.
+func (r *Client) FormTest(ctx context.Context, userID string, params FormTestParams, opts ...option.RequestOption) (res *FormTestResponse, err error) {
+	for _, v := range params.XFlags {
+		opts = append(opts, option.WithHeaderAdd("X-Flags", fmt.Sprintf("%v", v)))
+	}
+	if !param.IsOmitted(params.XTraceID) {
+		opts = append(opts, option.WithHeader("X-Trace-ID", fmt.Sprintf("%v", params.XTraceID.Value)))
+	}
+	opts = slices.Concat(r.Options, opts)
+	if userID == "" {
+		err = errors.New("missing required userId parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("form-v%v/users/%s", params.Version, userID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
+	return res, err
+}
+
+// Demonstrates a JSON endpoint with various parameter types including path, query,
+// and header parameters. Accepts JSON body for user updates.
+func (r *Client) JsonTest(ctx context.Context, userID string, params JsonTestParams, opts ...option.RequestOption) (res *JsonTestResponse, err error) {
+	for _, v := range params.XFlags {
+		opts = append(opts, option.WithHeaderAdd("X-Flags", fmt.Sprintf("%v", v)))
+	}
+	if !param.IsOmitted(params.XTraceID) {
+		opts = append(opts, option.WithHeader("X-Trace-ID", fmt.Sprintf("%v", params.XTraceID.Value)))
+	}
+	opts = slices.Concat(r.Options, opts)
+	if userID == "" {
+		err = errors.New("missing required userId parameter")
+		return nil, err
+	}
+	path := fmt.Sprintf("json-v%v/users/%s", params.Version, userID)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, params, &res, opts...)
+	return res, err
+}
+
+// Test nullable values.
+func (r *Client) NullableTest(ctx context.Context, body NullableTestParams, opts ...option.RequestOption) (err error) {
+	opts = slices.Concat(r.Options, opts)
+	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
+	path := "nullable"
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, body, nil, opts...)
+	return err
+}
+
+// Updates the current count with a new integer value. The value must be a positive
+// integer (minimum 1).
+func (r *Client) UpdateCount(ctx context.Context, body UpdateCountParams, opts ...option.RequestOption) (res *UpdateCountResponse, err error) {
+	opts = slices.Concat(r.Options, opts)
+	path := "count"
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPut, path, body, &res, opts...)
+	return res, err
+}
+
+// Accepts a binary file upload using multipart/form-data. Typical use cases
+// include uploading images, documents, or other opaque binaries.
+func (r *Client) UploadTest(ctx context.Context, body UploadTestParams, opts ...option.RequestOption) (res *UploadTestResponse, err error) {
+	opts = slices.Concat(r.Options, opts)
+	path := "upload"
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	return res, err
+}
+
+// Get detailed information about API versioning.
+func (r *Client) Version(ctx context.Context, opts ...option.RequestOption) (res *VersionResponse, err error) {
+	opts = slices.Concat(r.Options, opts)
+	path := "version"
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	return res, err
+}
+
+// No response will be returned
+func (r *Client) VoidTest(ctx context.Context, opts ...option.RequestOption) (err error) {
+	opts = slices.Concat(r.Options, opts)
+	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
+	path := "void-response"
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, nil, opts...)
+	return err
 }
