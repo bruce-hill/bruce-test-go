@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/bruce-hill/bruce-test-api-go"
-	"github.com/bruce-hill/bruce-test-api-go/internal"
-	"github.com/bruce-hill/bruce-test-api-go/option"
+	"github.com/stainless-sdks-staging/bruce-test-go"
+	"github.com/stainless-sdks-staging/bruce-test-go/internal"
+	"github.com/stainless-sdks-staging/bruce-test-go/option"
 )
 
 type closureTransport struct {
