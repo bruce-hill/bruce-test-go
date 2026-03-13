@@ -2,13 +2,13 @@ package apijson_test
 
 import (
 	"encoding/json"
-	"github.com/stainless-sdks-staging/bruce-test-go/internal/apijson"
-	"github.com/stainless-sdks-staging/bruce-test-go/packages/respjson"
+	"github.com/bruce-hill/bruce-test-api-go/internal/apijson"
+	"github.com/bruce-hill/bruce-test-api-go/packages/respjson"
 	"testing"
 )
 
 type StructWithNullExtraField struct {
-	Results []string `json:"results,required"`
+	Results []string `json:"results" api:"required"`
 	JSON    struct {
 		Results     respjson.Field
 		ExtraFields map[string]respjson.Field

@@ -1,4 +1,4 @@
-module github.com/stainless-sdks-staging/bruce-test-go
+module github.com/bruce-hill/bruce-test-api-go
 
 go 1.22
 

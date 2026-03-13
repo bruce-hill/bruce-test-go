@@ -41,7 +41,7 @@ To use a local version of this library from source in another project, edit the 
 directive. This can be done through the CLI with the following:
 
 ```sh
-$ go mod edit -replace github.com/stainless-sdks-staging/bruce-test-go=/path/to/bruce-test-go
+$ go mod edit -replace github.com/bruce-hill/bruce-test-api-go=/path/to/bruce-test-api-go
 ```
 
 ## Running tests
@@ -49,8 +49,7 @@ $ go mod edit -replace github.com/stainless-sdks-staging/bruce-test-go=/path/to/
 Most tests require you to [set up a mock server](https://github.com/stoplightio/prism) against the OpenAPI spec to run the tests.
 
 ```sh
-# you will need npm installed
-$ npx prism mock path/to/your/openapi.yml
+$ ./scripts/mock
 ```
 
 ```sh
