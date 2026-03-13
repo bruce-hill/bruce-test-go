@@ -7,10 +7,10 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/bruce-hill/bruce-test-go/internal/apijson"
-	"github.com/bruce-hill/bruce-test-go/internal/requestconfig"
-	"github.com/bruce-hill/bruce-test-go/packages/param"
-	"github.com/bruce-hill/bruce-test-go/packages/respjson"
+	"github.com/bruce-hill/bruce-test-go/v2/internal/apijson"
+	"github.com/bruce-hill/bruce-test-go/v2/internal/requestconfig"
+	"github.com/bruce-hill/bruce-test-go/v2/packages/param"
+	"github.com/bruce-hill/bruce-test-go/v2/packages/respjson"
 )
 
 // aliased to make [param.APIUnion] private when embedding

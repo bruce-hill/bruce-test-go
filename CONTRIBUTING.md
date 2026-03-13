@@ -41,7 +41,7 @@ To use a local version of this library from source in another project, edit the 
 directive. This can be done through the CLI with the following:
 
 ```sh
-$ go mod edit -replace github.com/bruce-hill/bruce-test-go=/path/to/bruce-test-go
+$ go mod edit -replace github.com/bruce-hill/bruce-test-go/v2=/path/to/bruce-test-go
 ```
 
 ## Running tests
